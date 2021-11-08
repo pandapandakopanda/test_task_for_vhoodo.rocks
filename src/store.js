@@ -17,7 +17,7 @@ export default class Store {
   }
 
   fetchUsers(){
-    fetch("http://jsonplaceholder.typicode.com/users")
+    fetch("https://jsonplaceholder.typicode.com/users")
     .then((resp) => {
       if(!resp.ok) {
         throw new Error(resp.status)
@@ -29,7 +29,7 @@ export default class Store {
   }
 
   fetchPosts(){
-    fetch("http://jsonplaceholder.typicode.com/posts")
+    fetch("https://jsonplaceholder.typicode.com/posts")
     .then((resp) => {
       if(!resp.ok) {
         throw new Error(resp.status)
