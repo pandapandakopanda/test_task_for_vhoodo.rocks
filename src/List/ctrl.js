@@ -1,13 +1,21 @@
-class Ctrl {
+import { action, makeObservable, observable } from 'mobx'
+export class Ctrl {
 
   posts = []
   users = []
 
-  constructor() {
+  constructor( ) {
+    makeObservable( this, {
+      setUsers: action,
+      setPosts: action,
+      posts: observable,
+      users: observable
+    } )
+
     this.init()
   }
 
-  fetchUsers = () => {
+  fetchUsers(){
     fetch("http://jsonplaceholder.typicode.com/users")
     .then((resp) => {
       if(resp.hasErr) {
@@ -16,11 +24,11 @@ class Ctrl {
       }
      return resp.json()
     }).then((json) => {
-      this.users = json
+      this.setUsers(json)
     })
   }
 
-  fetchPosts = () => {
+  fetchPosts(){
     fetch("http://jsonplaceholder.typicode.com/posts")
     .then((resp) => {
       if(resp.hasErr) {
@@ -29,16 +37,16 @@ class Ctrl {
       }
      return resp.json()
     }).then((json) => {
-      this.posts = json
+      this.setPosts(json)
     })
   }
 
-  getUser = () => {
-    return this.users
+  setUsers = (users) => {
+    this.users = users
   }
 
-  getPosts = () => {
-    return this.posts
+  setPosts = (posts) => {
+    this.posts = posts
   }
 
   init(){
