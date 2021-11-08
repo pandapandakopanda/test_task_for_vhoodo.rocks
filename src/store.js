@@ -1,5 +1,6 @@
 import { action, makeObservable, observable } from 'mobx'
-export class Ctrl {
+
+export default class Store {
 
   posts = []
   users = []
@@ -18,9 +19,8 @@ export class Ctrl {
   fetchUsers(){
     fetch("http://jsonplaceholder.typicode.com/users")
     .then((resp) => {
-      if(resp.hasErr) {
-        console.log('Error occured');
-        return
+      if(!resp.ok) {
+        throw new Error(resp.status)
       }
      return resp.json()
     }).then((json) => {
@@ -31,9 +31,8 @@ export class Ctrl {
   fetchPosts(){
     fetch("http://jsonplaceholder.typicode.com/posts")
     .then((resp) => {
-      if(resp.hasErr) {
-        console.log('Error occured');
-        return
+      if(!resp.ok) {
+        throw new Error(resp.status)
       }
      return resp.json()
     }).then((json) => {
@@ -55,7 +54,3 @@ export class Ctrl {
   }
 
 }
-
-const ctrl = new Ctrl()
-
-export default ctrl

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 
-import ctrl from'./ctrl'
 import Card from '../Card'
+import { isNull } from './hlp'
 import search from '../assets/search.png'
 
 import './styles.scss'
@@ -14,23 +14,31 @@ import './styles.scss'
   }
 
   getAuthorById = (id) => {
-    const {users} = ctrl
-    if(users.length === 0) return null
+    const { store } = this.props
+    const {users} = store
+    if( users.length === 0 ) return null
 
-    const author = users.filter((user) => user.id === id)[0]?.name
-    return author === undefined ? '' : author
+    const author = users.filter((user) => user.id === id)[0]?.name 
+    return isNull(author) ? null : author
   }
 
-  getCards = () => {
+  showCard = (author) => {
     const {inputValue} = this.state
-    const { posts } = ctrl
+    return inputValue === '' || author.toLowerCase().includes(inputValue.toLocaleLowerCase())
+  }
+
+  renderCards = () => {
+    const { store } = this.props
+    const { posts } = store
     if ( posts.length === 0 ) return null
 
     return posts.map((item) => {
       const author = this.getAuthorById(item.userId)
-      if (inputValue === '' || author.toLowerCase().includes(inputValue.toLocaleLowerCase())){
-        return <Card text={item.body} title={item.title} author={author} key = {item.id}/>
-      } else return null
+      if(isNull(author)) return null
+
+    return this.showCard(author) ?
+      <Card text={item.body} title={item.title} author={author} key={item.id}/>
+      : null
     })
   }
 
@@ -39,8 +47,6 @@ import './styles.scss'
   }
 
   render(){
-
-    const cards = this.getCards()
 
     return (
       <>
@@ -62,7 +68,7 @@ import './styles.scss'
         </div>
         
         <div className='container d-flex flex-wrap'>
-            {cards}
+            {this.renderCards()}
         </div>
       </>
     )
